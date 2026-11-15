@@ -245,3 +245,6 @@ html.land #week svg { width: 2.1rem; height: 2.1rem; }
 html.land #week .c7 { font-size: 1.5rem; }
 html.land #week .c5 { font-size: 1.2rem; }
 html.land #week .c4 { font-size: 0.85rem; }
+
+/* ===== v1.12 — 외부 여백 상하좌우 20px 고정 (세로·가로 공통) ===== */
+#app, html.land #app { padding: 20px; }
