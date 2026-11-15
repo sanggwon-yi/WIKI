@@ -14,7 +14,7 @@ for i in zin.infolist():
         data = open(os.path.join(assets, i.filename[len('assets/'):]), 'rb').read()
     if i.filename == 'AndroidManifest.xml':
         # 버전 갱신 + 세로 고정(screenOrientation=portrait, 기기 회전 센서 무시). 가로는 앱 안 버튼으로 전환
-        add = [] if any(n == 'screenOrientation' for _, n, *_ in axml.parse(data)[1]) else [('activity', 'screenOrientation', 0x0101001e, 16, 1)]
+        add = [] if os.environ.get('NO_ORIENT_LOCK') or any(n == 'screenOrientation' for _, n, *_ in axml.parse(data)[1]) else [('activity', 'screenOrientation', 0x0101001e, 16, 1)]
         data = axml_edit.edit(data, set_attrs=[('manifest', 'versionCode', 16, vcode), ('manifest', 'versionName', 3, vname)], add_attrs=add)
     files.append((i.filename, data, i.compress_type))
 # 원본에 없는 새 asset 파일 추가
