@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no"/>
+<title>신발방 대시보드</title>
+<link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+<div id="app">
+
+  <!-- 상단: 지역 · 시계 · 현재 날씨 -->
+  <header class="top">
+    <div class="topL">
+      <div class="loc" id="loc">인천 계양구 동양동</div>
+      <div class="sub" id="upd">불러오는 중…</div>
+    </div>
+    <div class="btns"><span class="btn" id="bLoc">지역</span><span class="btn" id="bCal">일정 주소</span><span class="btn" id="bRef">새로고침</span></div>
+  </header>
+
+  <div class="wxTop">
+  <section class="hero">
+    <div class="heroL">
+      <div class="clock" id="clock">--:--</div>
+      <div class="d1" id="date1"></div>
+      <div class="d2" id="sun"></div>
+      <div class="d3" id="nextEv"></div>
+    </div>
+    <div class="heroR box">
+      <div class="nowIcon"><div id="nowIco"></div><div id="nowTxt">-</div></div>
+      <div class="nowTemp" id="nowTemp">-°</div>
+      <div class="nowMeta">
+        <div class="tag" id="yday">어제 비교 -</div>
+        <div id="hilo">최고 - / 최저 -</div>
+        <div class="sm" id="feel">체감온도 -</div>
+        <div class="sm" id="pop">강수확률 -</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tiles" id="tiles"></div>
+
+  <section class="box">
+    <div class="h">시간별 날씨</div>
+    <div class="hours" id="hours"></div>
+  </section>
+
+  <section class="box">
+    <div class="h">주간 날씨</div>
+    <div id="week"></div>
+  </section>
+  </div>
+
+  <!-- 중단: 주간날씨+일정 | 뉴스 -->
+  <section class="mid">
+    <div class="col">
+      <div class="box grow">
+        <div class="h">일정 · 구글 캘린더 <span class="hsub" id="calAt"></span></div>
+        <div class="clip" id="cal"></div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="box grow">
+        <div class="h">뉴스 · 연합뉴스 <span class="hsub" id="newsAt"></span></div>
+        <div class="tabs" id="newsTabs"></div>
+        <ol class="news clip" id="news"><li>불러오는 중…</li></ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- 하단: 속담 | 내일 준비물 -->
+  <section class="bot">
+    <div class="box quote">
+      <div class="h">오늘의 속담</div>
+      <div class="qt" id="qt"></div>
+      <div class="qm" id="qm"></div>
+    </div>
+    <div class="box">
+      <div class="h">내일 준비물</div>
+      <div class="memo" id="memo"></div>
+    </div>
+  </section>
+
+  <footer class="foot"><span id="auto">자동 갱신 30분마다</span><span class="sig">presented by g.ad.c ©2026</span></footer>
+
+  <div class="sheet hide" id="calSheet">
+    <div class="box">
+      <div class="h">구글 캘린더 iCal 비공개 주소</div>
+      <div class="sm">PC 구글 캘린더 → 설정 → 내 캘린더(이름 클릭) → 캘린더 통합 → "iCal 형식의 비공개 주소" 복사 후 붙여넣기. 여러 개는 줄바꿈.</div>
+      <textarea id="calUrls" rows="5"></textarea>
+      <div class="btn wide" id="bCalSave">저장하고 불러오기</div>
+      <div class="btn wide" id="bCalClose">닫기</div>
+    </div>
+  </div>
+  <div class="sheet hide" id="sheet">
+    <div class="box">
+      <div class="h">지역 선택</div>
+      <div id="locList"></div>
+      <div class="btn wide" id="bClose">닫기</div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+window.onerror = function (m, src, line) { try { document.getElementById('upd').innerHTML = 'JS 오류: ' + String(m).replace(/[<&]/g, '') + ' (줄 ' + line + ')'; } catch (e) {} return false; };
+</script>
+<script type="text/javascript" src="app.js"></script>
+</body>
+</html>
