@@ -598,13 +598,29 @@
       '&current=pm10,pm2_5,uv_index&timezone=Asia%2FSeoul';
   }
 
+  // v1.11 — 실패 시 자동 재시도 (Wi-Fi가 늦게 붙는 경우 대비): 15초·30초·1분·2분 후, 이후 5분마다
+  var RETRY_SEC = [15, 30, 60, 120, 300], failCount = 0, retryT = null, busy = false, lastOk = false;
+  function scheduleRetry() {
+    if (retryT) clearTimeout(retryT);
+    var sec = RETRY_SEC[Math.min(failCount - 1, RETRY_SEC.length - 1)];
+    retryT = setTimeout(function () { retryT = null; refresh(); }, sec * 1000);
+    return sec;
+  }
   function refresh() {
+    if (busy) return;
+    busy = true;
+    if (retryT) { clearTimeout(retryT); retryT = null; }
     setText('loc', loc.n);
     lastRefresh = Date.now();
     setText('upd', '갱신 중…');
     var pending = 2, wData = null, aData = null, err = '';
     function done() {
       if (--pending) return;
+      busy = false;
+      lastOk = !!wData;
+      if (wData) failCount = 0;
+      else failCount++;
+      var retryMsg = wData ? '' : ' · ' + fmtSec(scheduleRetry()) + ' 후 재시도 (' + failCount + '회째)';
       if (wData) {
         lastW = wData; lastA = aData;
         save('dash.cache', { w: wData, a: aData, at: Date.now(), loc: loc.n });
@@ -616,8 +632,8 @@
         if (c && c.loc === loc.n) {
           renderWeather(c.w, c.a);
           var cd = new Date(c.at);
-          setText('upd', '오프라인 — ' + (cd.getMonth() + 1) + '/' + cd.getDate() + ' ' + pad(cd.getHours()) + ':' + pad(cd.getMinutes()) + ' 저장본');
-        } else setText('upd', '불러오기 실패 (' + err + ') — Wi-Fi 확인');
+          setText('upd', '오프라인 — ' + (cd.getMonth() + 1) + '/' + cd.getDate() + ' ' + pad(cd.getHours()) + ':' + pad(cd.getMinutes()) + ' 저장본' + retryMsg);
+        } else setText('upd', '불러오기 실패 (' + err + ')' + retryMsg);
       }
     }
     get(wUrl(), false, function (j) { wData = j; done(); }, function (e) { err = e.message; done(); });
@@ -628,7 +644,11 @@
   }
 
   var lastRefresh = 0;
-  window.__onResume = function () { if (Date.now() - lastRefresh > 10 * 60000) refresh(); };
+  function fmtSec(n) { return n < 60 ? n + '초' : Math.round(n / 60) + '분'; }
+  // 화면 복귀 시: 직전 갱신이 실패했으면 바로, 성공했으면 10분 지났을 때 갱신
+  window.__onResume = function () { if (!lastOk || Date.now() - lastRefresh > 10 * 60000) refresh(); };
+  // Wi-Fi가 다시 연결되면 바로 갱신 (WebView가 online 이벤트를 주는 경우)
+  window.addEventListener('online', function () { if (!lastOk) refresh(); }, false);
   function scheduleRefresh() { setTimeout(function () { refresh(); scheduleRefresh(); }, REFRESH_MIN * 60000); }
 
   /* ---------- 페이지/지역 ---------- */
