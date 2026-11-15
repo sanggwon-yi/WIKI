@@ -106,17 +106,29 @@
   window.__nativeCb = function (id, ok, text) {
     var cb = nCbs[id]; if (!cb) return; delete nCbs[id]; cb(ok, text);
   };
+  // v1.14 — 앱(자바) 통신이 실패하면 WebView 자체 통신(XHR)으로 한 번 더 시도.
+  //  open-meteo는 CORS 허용이라 웹 통신으로도 받을 수 있음. 실패 시 두 경로의 오류를 함께 표시
   function xhr(url, ok, fail) {
     if (NATIVE) {
+      nativeXhr(url, ok, function (e1) {
+        webXhr(url, ok, function (e2) { fail(new Error('앱: ' + e1.message + ' / 웹: ' + e2.message)); });
+      });
+      return;
+    }
+    webXhr(url, ok, fail);
+  }
+  function nativeXhr(url, ok, fail) {
+    {
       var id = 'n' + (++nSeq), over = false;
-      var t = setTimeout(function () { over = true; delete nCbs[id]; fail(new Error('응답 없음 40초')); }, 40000);
+      var t = setTimeout(function () { over = true; delete nCbs[id]; fail(new Error('응답 없음 25초')); }, 25000);
       nCbs[id] = function (good, text) {
         if (over) return; clearTimeout(t);
         if (good) ok({ status: 200, responseText: text, responseXML: null }); else fail(new Error(text));
       };
       try { NATIVE.fetch(id, url); } catch (e) { clearTimeout(t); delete nCbs[id]; fail(e); }
-      return;
     }
+  }
+  function webXhr(url, ok, fail) {
     var x, finished = false;
     var timer = setTimeout(function () {
       if (finished) return; finished = true;

@@ -6,11 +6,11 @@
 - `assets/` — 화면(HTML/CSS/JS, ES5만 사용). 실제 수정은 여기서 함
 - `base/` — 직전 APK. `classes.dex`(자바 브리지 `AndroidNet.fetch`, WebView)와 리소스는 이 파일에서 그대로 가져옴
   - v1.8 원본 자바 소스는 남아 있지 않음. dex를 바꿔야 하는 작업이면 역컴파일 또는 재작성 필요
-- `tools/` — 빌드·서명(`build.py`, `apkv2.py`, `axml.py`, `axml_edit.py`), 브라우저 모의 테스트(`mock.js`, `shoot.js`, `rot_test.js`, `retry_test.js`)
+- `tools/` — 빌드·서명(`build.py`, `apkv2.py`, `axml.py`, `axml_edit.py`), 브라우저 모의 테스트(`mock.js`, `shoot.js`, `rot_test.js`, `retry_test.js`, `fallback_test.js`)
 
 ## 빌드
 ```
-./build.sh 13 1.12 <keystore> <password-file>
+./build.sh 15 1.14 <keystore> <password-file>
 ```
 - 서명 키는 저장소에 넣지 않음. 업데이트 설치는 같은 키로 서명해야 가능
 - v1.8까지: `gadc.keystore` (원본 보관 위치 미확인)
@@ -29,3 +29,5 @@ cd tools && node shoot.js "$(pwd)/../assets" <스크린샷 폴더>
 - v1.10 (versionCode 11) — 기기 회전 센서로 바뀌지 않게 세로 고정(매니페스트 screenOrientation=portrait). 상단 [가로] 버튼으로 세로 → 가로 → 가로 반대 → 세로 전환(화면 내용을 CSS로 90° 회전), 선택은 기기에 저장
 - v1.11 (versionCode 12) — 날씨 불러오기 실패 시 자동 재시도(15초·30초·1분·2분, 이후 5분마다), 실패했으면 화면 복귀·Wi-Fi 재연결 시 바로 갱신, 상태줄에 실패 사유·다음 재시도 표시
 - v1.12 (versionCode 13) — 외부 여백(#app padding) 상하좌우 20px 고정, 세로·가로 공통
+- v1.13 (versionCode 14) — 확인용: v1.8 화면 파일 그대로 + gadc2 서명 (`NO_ORIENT_LOCK=1`). 실기기에서 날씨 실패 재현 → 화면 코드가 원인이 아님
+- v1.14 (versionCode 15) — 앱(자바) 통신 실패 시 WebView XHR로 재시도, 상태줄에 두 경로 오류 함께 표시

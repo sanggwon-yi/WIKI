@@ -19,6 +19,10 @@
   function ev(off,h,t){var d=new Date();d.setDate(d.getDate()+off);var s=d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate());return 'BEGIN:VEVENT\r\nUID:'+t+'\r\nDTSTART:'+s+'T'+pad(h)+'0000\r\nDTEND:'+s+'T'+pad(h+1)+'0000\r\nSUMMARY:'+t+'\r\nEND:VEVENT\r\n';}
   var ics='BEGIN:VCALENDAR\r\n'+ev(0,10,'테스트 일정 A')+ev(0,15,'테스트 일정 B')+ev(1,9,'테스트 일정 C')+ev(2,19,'테스트 일정 D')+'END:VCALENDAR\r\n';
   try{localStorage.setItem('dash.calUrls',JSON.stringify(['https://mock.test/cal.ics']));}catch(e){}
+  window.__mockBody=function(url){
+    if(url.indexOf('air-quality')>=0)return JSON.stringify(A);
+    if(url.indexOf('open-meteo')>=0)return JSON.stringify(W);
+    return null;};
   window.AndroidNet={fetch:function(id,url){var body,ok=true;
     if(url.indexOf('air-quality')>=0)body=JSON.stringify(A);
     else if(url.indexOf('open-meteo')>=0)body=JSON.stringify(W);
