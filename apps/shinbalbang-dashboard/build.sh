@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # 사용법: ./build.sh <versionCode> <versionName> <keystore> <password-file>
 #  - base/ 의 APK에서 classes.dex·리소스를 그대로 가져오고 assets/ 만 교체
-#  - versionName은 base APK의 것과 글자 수가 같아야 함 (예: 1.8 → 1.9)
+#  - 매니페스트: versionCode/versionName 갱신, 액티비티 세로 고정(screenOrientation=portrait)
 #  - v1(JAR) + v2 서명, 4바이트 정렬, 서명 자체 검증까지 수행
 set -euo pipefail
 cd "$(dirname "$0")"

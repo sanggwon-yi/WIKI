@@ -171,6 +171,14 @@
   function hhmm(iso) { return iso ? iso.substr(11, 5) : '-'; }
 
   var lastWx = null;
+  // v1.10 — 화면 방향은 앱 안 버튼으로만 전환: '' 세로 → 'r' 가로(시계방향) → 'l' 가로(반시계방향) → 세로
+  var ORIENTS = ['', 'r', 'l'], ORIENT_LABEL = { '': '가로', r: '가로 반대', l: '세로' };
+  var orient = load('dash.orient', '');
+  if (ORIENTS.indexOf(orient) < 0) orient = '';
+  function applyOrient() {
+    document.documentElement.className = orient ? 'land land-' + orient : '';
+    setText('bRot', ORIENT_LABEL[orient]);
+  }
   function renderWeather(w, a) {
     lastWx = [w, a];
     var c = w.current, h = w.hourly, dly = w.daily;
@@ -213,7 +221,7 @@
     var pts = [];
     for (var k = 0; k < 8; k++) { var j = idx + k * 3; if (j >= h.time.length) break; pts.push(j); }
     if (pts.length) {
-      var W = hs.clientWidth || 700, H = Math.round((parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) * (window.innerWidth > window.innerHeight ? 6 : 3.6));
+      var W = hs.clientWidth || 700, H = Math.round((parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) * (orient ? 6 : 3.6));
       var n = pts.length, tmin = 99, tmax = -99, q;
       for (q = 0; q < n; q++) { tmin = Math.min(tmin, h.temperature_2m[pts[q]]); tmax = Math.max(tmax, h.temperature_2m[pts[q]]); }
       var rng = Math.max(2, tmax - tmin), top = H * 0.42, bot = H * 0.82;
@@ -653,6 +661,11 @@
 
   onTap('prev', function () { show(page - 1); });
   onTap('next', function () { show(page + 1); });
+  onTap('bRot', function () {
+    orient = ORIENTS[(ORIENTS.indexOf(orient) + 1) % ORIENTS.length];
+    save('dash.orient', orient); applyOrient();
+    if (lastWx) { try { renderWeather(lastWx[0], lastWx[1]); } catch (e) {} }
+  });
   onTap('bRef', refresh);
   onTap('bLoc', openLoc);
   onTap('bClose', function () { $('sheet').className = 'sheet hide'; });
@@ -676,6 +689,7 @@
       if (lastWx) { try { renderWeather(lastWx[0], lastWx[1]); } catch (e) {} }
     }, 300);
   }, false);
+  applyOrient();
   setText('auto', '자동 갱신 ' + REFRESH_MIN + '분마다');
   renderTabs();
   tickClock();

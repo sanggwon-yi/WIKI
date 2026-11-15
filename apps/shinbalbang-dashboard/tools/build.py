@@ -1,7 +1,7 @@
-"""v1.9 APK 재조립: 원본 APK의 dex·리소스는 그대로, assets 교체, 매니페스트 버전 패치, 정렬, v1+v2 서명."""
+"""APK 재조립: base APK의 dex·리소스는 그대로, assets 교체, 매니페스트 버전·세로 고정 패치, 정렬, v1+v2 서명."""
 import zipfile, struct, sys, os, subprocess, io, tempfile, shutil
 sys.path.insert(0, os.path.dirname(__file__))
-import axml, apkv2
+import axml, axml_edit, apkv2
 orig, assets, out, vcode, vname, ks, pwf, keypem, certpem = sys.argv[1:10]
 vcode = int(vcode); pw = open(pwf).read().strip()
 
@@ -13,15 +13,9 @@ for i in zin.infolist():
     if i.filename.startswith('assets/'):
         data = open(os.path.join(assets, i.filename[len('assets/'):]), 'rb').read()
     if i.filename == 'AndroidManifest.xml':
-        b = bytearray(data); strs, attrs = axml.parse(bytes(b))
-        for el, n, vt, vd, raw, voff in attrs:
-            if el == 'manifest' and n == 'versionCode':
-                struct.pack_into('<I', b, voff, vcode)
-            if el == 'manifest' and n == 'versionName':
-                s, p, ln, enc = strs[raw]
-                assert len(vname) == ln, 'versionName 길이가 같아야 함'
-                b[p:p+(2*ln if enc == 'u16' else ln)] = vname.encode('utf-16le' if enc == 'u16' else 'utf-8')
-        data = bytes(b)
+        # 버전 갱신 + 세로 고정(screenOrientation=portrait, 기기 회전 센서 무시). 가로는 앱 안 버튼으로 전환
+        add = [] if any(n == 'screenOrientation' for _, n, *_ in axml.parse(data)[1]) else [('activity', 'screenOrientation', 0x0101001e, 16, 1)]
+        data = axml_edit.edit(data, set_attrs=[('manifest', 'versionCode', 16, vcode), ('manifest', 'versionName', 3, vname)], add_attrs=add)
     files.append((i.filename, data, i.compress_type))
 # 원본에 없는 새 asset 파일 추가
 have = {f[0] for f in files}
