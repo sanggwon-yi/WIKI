@@ -1,0 +1,13 @@
+{
+  "name": "duo-agent-platform",
+  "version": "0.1.0",
+  "description": "Claude와 Gemini가 함께 자료조사하고 작업하는 대화형 에이전트 플랫폼",
+  "type": "module",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server.mjs",
+    "mock": "MOCK=1 node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  }
+}

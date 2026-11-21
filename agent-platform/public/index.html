@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Duo Research</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="dot claude"></span><span class="dot gemini"></span>
+      <h1>Duo Research</h1>
+    </div>
+    <div class="status" id="status">연결 확인 중…</div>
+  </header>
+
+  <main id="thread" class="thread">
+    <section class="intro" id="intro">
+      <h2>Claude와 Gemini가 함께 조사합니다</h2>
+      <ol>
+        <li><b>계획</b> — Claude가 질문을 나눠 역할을 배정</li>
+        <li><b>자료조사</b> — 두 에이전트가 각자 웹 검색으로 동시에 조사</li>
+        <li><b>교차 검증</b> — 서로의 조사 노트를 확인하고 바로잡음</li>
+        <li><b>종합</b> — Claude가 출처 번호를 달아 최종 답변·결과물 작성</li>
+      </ol>
+      <p class="muted">출처로 확인되지 않은 내용은 <code>[미확인]</code>으로 표시하도록 지시되어 있습니다.</p>
+    </section>
+  </main>
+
+  <form id="composer" class="composer">
+    <div class="opts">
+      <label>모드
+        <select id="mode">
+          <option value="collab">협업 리서치 (Claude + Gemini)</option>
+          <option value="claude">Claude 단독</option>
+          <option value="gemini">Gemini 단독</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="web" checked /> 웹 검색</label>
+      <button type="button" id="reset" class="ghost">새 대화</button>
+    </div>
+    <div class="row">
+      <textarea id="input" rows="2" placeholder="조사하거나 작업할 내용을 입력하세요 (Enter 전송, Shift+Enter 줄바꿈)"></textarea>
+      <button id="send" type="submit">보내기</button>
+    </div>
+  </form>
+
+  <script src="/markdown.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
