@@ -18,7 +18,35 @@ Node.js 하나로 돌아가며 외부 패키지 의존성이 없습니다.
 - 이전 대화(최근 8개 메시지)가 맥락으로 이어집니다.
 - 그 외 모드: **Claude 단독**, **Gemini 단독**. 웹 검색은 끌 수 있습니다.
 
-## 실행
+## 아티팩트 버전 (Claude는 claude.ai 안에서, Gemini만 API로)
+
+`artifact/duo-research.html`은 claude.ai 아티팩트로 게시하는 버전입니다. Anthropic API 키가 필요 없습니다.
+
+- **Claude**: 아티팩트의 `sample` 기능으로, 페이지를 연 사람의 claude.ai 계정에서 실행됩니다. 이 방식의 Claude는 웹 검색을 할 수 없으므로 계획·검증·종합을 맡습니다.
+- **Gemini**: 아티팩트 페이지는 외부 API로 직접 요청할 수 없어서(보안 정책), 로컬 MCP 브리지 `gemini-mcp/server.mjs`를 거칩니다. 페이지는 이를 `host:gemini`로 호출합니다.
+- 흐름: Claude 계획 → Gemini 검색(과제별 동시 실행) → Claude가 노트 검증 후 재검색 요청(최대 2개) → Claude가 출처 번호를 달아 최종 답변.
+
+### Gemini 브리지 설정
+1. 이 폴더를 PC에 받습니다 (Node.js 18 이상).
+2. Claude 데스크톱 앱 → 설정 → 개발자 → MCP 설정 파일(`claude_desktop_config.json`)에 추가:
+   ```json
+   {
+     "mcpServers": {
+       "gemini": {
+         "command": "node",
+         "args": ["/절대경로/agent-platform/gemini-mcp/server.mjs"],
+         "env": { "GEMINI_API_KEY": "키", "GEMINI_MODEL": "gemini-2.5-flash" }
+       }
+     }
+   }
+   ```
+3. 앱을 재시작하고 아티팩트를 **Claude 데스크톱 앱에서** 엽니다.
+
+제약: 로컬 MCP(`host:`) 호출은 데스크톱 앱에서만, 그리고 아티팩트 소유자만 쓸 수 있습니다. 웹 브라우저에서 열면 Gemini 없이 Claude만 동작합니다(화면에 표시됨).
+
+브리지 도구: `gemini_research {query, context?}` (Google 검색 그라운딩), `gemini_ask {prompt}` (검색 없음). 반환: `{text, sources:[{url,title}], model}`.
+
+## 서버 버전 실행 (두 API 모두 사용)
 
 ```bash
 cd agent-platform
