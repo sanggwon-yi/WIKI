@@ -1,0 +1,4 @@
+.claude/handoff.md
+.claude/handoff.used-*.md
+.claude/.context-guard/
+.claude/settings.local.json
