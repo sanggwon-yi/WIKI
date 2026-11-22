@@ -1,0 +1,153 @@
+{
+ "name": "동양동",
+ "title": "동양동, 인천 계양구",
+ "region": "인천 계양구",
+ "place": "동양로 · 양지로 아파트 단지",
+ "flag": "<svg aria-hidden='true' viewBox='0 0 30 20'><rect width='30' height='20' fill='#fbf7ee'/><circle cx='15' cy='10' r='5' fill='#c9584c'/><path d='M10 10a2.5 2.5 0 0 0 5 0a2.5 2.5 0 0 1 5 0a5 5 0 0 1-10 0z' fill='#2f5d8a'/></svg>",
+ "timezone": "Asia/Seoul",
+ "level": 2.8,
+ "styles": {
+  "default": {
+   "facade": "apartment",
+   "wall": ["#eeeae0", "#e9e4d8", "#f1ede4"],
+   "roof": "flat",
+   "flatRoof": "#c9c4b8",
+   "parapet": 1.0,
+   "floor": 2.8,
+   "levels": 15,
+   "balcony": true,
+   "shop": "none",
+   "glass": ["#a9bcc6", "#9fb3bf"],
+   "trim": "#b9a68a"
+  },
+  "rules": [
+   {
+    "if": { "type": "retail" },
+    "set": { "facade": "plain", "levels": 2, "floor": 3.5, "balcony": false, "shop": "street", "wall": ["#e6ddcd"], "awning": false, "fascia": ["#2f5d8a", "#3f6a55"] }
+   },
+   {
+    "if": { "unknownHeight": true },
+    "set": { "facade": "plain", "levels": 2, "floor": 3.3, "balcony": false, "wall": ["#e4dccd"] }
+   }
+  ]
+ },
+ "buildings": {},
+ "palette": {
+  "ground": "#e9e0cc",
+  "road": "#a9a5a8",
+  "pavement": "#e3d8c4",
+  "walk": "#ddd2bd",
+  "grass": "#b4d784",
+  "slab": "#d6c6a8",
+  "marking": "#f4efe2",
+  "kerb": "#d9d2c2",
+  "paving": "#c2b6a4"
+ },
+ "paving": { "style": "tiles", "size": 0.3 },
+ "lamp": { "colour": "#6a6f73", "height": 6, "head": "#f3ecd8" },
+ "shops": {
+  "signs": ["편의점", "세탁소", "미용실", "부동산", "약국"],
+  "font": "'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif",
+  "fascias": ["#2f5d8a", "#3f6a55", "#8a3d36", "#5d5a72"]
+ },
+ "trees": {
+  "default": { "style": 3, "colours": ["#8ab673", "#a3c477"], "height": 8, "autumn": "#d9a24a" },
+  "rules": [
+   {
+    "match": "Park tree",
+    "vary": 0.35,
+    "mix": [
+     { "style": 3, "colours": ["#86b46d", "#9dc274"], "height": 9, "autumn": "#d98b45", "share": 2 },
+     { "style": 1, "colours": ["#93bb70"], "height": 8, "autumn": "#e0b54c", "share": 1 },
+     { "style": 5, "colours": ["#5f9257"], "height": 7, "evergreen": true, "share": 1 }
+    ]
+   }
+  ]
+ },
+ "people": {
+  "clothes": ["#2f3640", "#e9e4d8", "#7d8b9a", "#3e5a7a", "#a85a4a", "#d8c7a0", "#4d5b4a"],
+  "umbrellas": ["#2f3640", "#e9e4d8", "#3e5a7a", "#c9584c"]
+ },
+ "vehicles": {
+  "kinds": ["sedan", "sedan", "suv", "hatch", "mpv", "small"],
+  "colours": ["#f2f2ee", "#f2f2ee", "#2b2d33", "#2b2d33", "#a3a8ad", "#c8ccd0", "#5b6470"],
+  "plate": "#f4f4f0",
+  "taxi": { "share": 0.08, "colours": ["#e9e7e0", "#c8ccd0"], "kind": "sedan", "sign": "#f6e7a6" }
+ },
+ "seasonLabel": "계절",
+ "seasons": [
+  {
+   "id": "spring",
+   "label": "봄",
+   "leaves": "spring",
+   "crowd": 1.1,
+   "note": { "text": "인천의 월평균 풍속은 3월이 3.6m/s로 가장 높다.", "source": "기상청 날씨누리", "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1" }
+  },
+  {
+   "id": "summer",
+   "label": "여름",
+   "leaves": "summer",
+   "wet": true,
+   "umbrellas": 0.5,
+   "wx": "rain",
+   "crowd": 0.8,
+   "note": { "text": "인천의 여름철 강수량 합은 718.3mm로 연강수량의 약 60%다.", "source": "기상청 날씨누리", "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1" }
+  },
+  {
+   "id": "autumn",
+   "label": "가을",
+   "leaves": "autumn",
+   "crowd": 1.0,
+   "note": { "text": "인천의 첫서리 평년일은 11월 11일이다.", "source": "기상청 날씨누리", "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1" }
+  },
+  {
+   "id": "winter",
+   "label": "겨울",
+   "leaves": "bare",
+   "coats": true,
+   "crowd": 0.7,
+   "note": { "text": "인천에서 가장 추운 달은 1월로, 평균기온이 -1.5℃다.", "source": "기상청 날씨누리", "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1" }
+  },
+  {
+   "id": "snow",
+   "label": "눈",
+   "sub": "winter",
+   "leaves": "bare",
+   "snow": true,
+   "wx": "snow",
+   "coats": true,
+   "crowd": 0.5,
+   "note": { "text": "인천의 첫눈 평년일은 11월 23일이다.", "source": "기상청 날씨누리", "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1" }
+  }
+ ],
+ "occasions": [],
+ "months": ["winter", "winter", "spring", "spring", "spring", "summer", "summer", "summer", "autumn", "autumn", "autumn", "winter"],
+ "isoLabel": "동양동 전경",
+ "views": [
+  { "id": "complex", "label": "아파트 단지", "camera": { "yaw": -30, "pitch": 30, "zoom": 1.5, "x": 0, "y": -15, "z": 10 } },
+  { "id": "street", "label": "동양로", "camera": { "yaw": 20, "pitch": 24, "zoom": 3.2, "x": -60, "y": 40, "z": 3 } },
+  { "id": "green", "label": "완충녹지", "camera": { "yaw": -10, "pitch": 32, "zoom": 3, "x": 20, "y": 45, "z": 2 } }
+ ],
+ "legend": [
+  { "name": "15층 아파트 동", "source": "OpenStreetMap", "count": "8", "icon": "buildings", "camera": { "yaw": -30, "pitch": 30, "zoom": 1.5, "x": 0, "y": -15, "z": 10 } },
+  { "name": "녹지 나무", "source": "배치는 예시", "count": "18", "icon": "trees", "camera": { "yaw": -10, "pitch": 32, "zoom": 3, "x": 20, "y": 45, "z": 2 } }
+ ],
+ "notes": [
+  {
+   "title": "부지",
+   "text": "인천 계양구 동양동, 동양로와 양지로 사이 200m 정사각형입니다. 건물 윤곽, 층수, 도로, 녹지는 OpenStreetMap에서 가져왔습니다. 북쪽 격자 도로는 지도에 표시된 그대로입니다.",
+   "links": [ { "label": "OpenStreetMap", "url": "https://www.openstreetmap.org/#map=18/37.5584/126.7568" } ]
+  },
+  {
+   "title": "기후",
+   "text": "계절 설명은 모두 기상청 1991~2020 평년값 기준 인천 관측소 자료입니다.",
+   "links": [ { "label": "기상청 지역별 기후특성", "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1" } ]
+  },
+  {
+   "title": "예시로 그린 것",
+   "text": "외벽·지붕·간판 색, 발코니 형태, 나무 수종과 위치, 차량 종류와 색, 사람과 차량의 움직임은 현장 사진으로 확인하지 못해 예시로 그렸습니다. 층수가 없는 건물 2동은 2층으로 그렸습니다.",
+   "links": [ { "label": "OpenStreetMap", "url": "https://www.openstreetmap.org/#map=18/37.5584/126.7568" } ]
+  }
+ ],
+ "credits": []
+}
