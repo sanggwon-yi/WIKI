@@ -186,6 +186,7 @@ function paintSingaporeElevation(g,id){
   if(F.cut){box(0,0,L,H,shade('#d3c4b6'));for(let y=st.floor;y<H;y+=st.floor)box(0,y,L,.12,shade('#e6dac6'));g.restore();return}
   if(UPX>1.1){g.restore();return}
   const kind=st.facade,fl=st.floor||LEVEL;
+  if(kind==='box'){g.restore();return}   // plain box: bare wall, no windows, doors or ornament (used by pocketcity_auto)
   const shopH=F.shop?Math.min(H,st.shopHeight||Math.max(3.1,fl*1.1)):0,upper=H-shopH;
   const floors=Math.max(1,Math.round(upper/fl)),rh=upper/Math.max(1,floors);
   const bayW=st.bay||(kind==='glass'?2:kind==='office'?2.4:kind==='timber'?1.8:kind==='civic'||kind==='temple'?4.2:kind==='painted'?2.6:3.2);
