@@ -388,7 +388,7 @@ def main():
                 d += rng.choice([3.2, 3.6, 4.2])
         # a few at anchor further out
         x0, y0, x1, y1 = sea.bounds
-        for i in range(60):
+        for i in range(0 if sea.is_empty else 60):   # no water inside the plot: bounds would be NaN
             if len([b for b in boats if b.get('anchor')]) >= 9: break
             px, py = rng.uniform(x0, x1), rng.uniform(y0, y1); p_ = Point(px, py)
             L, ang = rng.choice([7, 9, 11]), rng.uniform(-math.pi, math.pi)

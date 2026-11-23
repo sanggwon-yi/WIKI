@@ -1,0 +1,529 @@
+{
+ "name": "동양동",
+ "title": "동양동, 인천 계양구",
+ "region": "인천 계양구",
+ "place": "동양도서관 주변 600m",
+ "flag": "<svg aria-hidden='true' viewBox='0 0 30 20'><rect width='30' height='20' fill='#fbf7ee'/><circle cx='15' cy='10' r='5' fill='#c9584c'/><path d='M10 10a2.5 2.5 0 0 0 5 0a2.5 2.5 0 0 1 5 0a5 5 0 0 1-10 0z' fill='#2f5d8a'/></svg>",
+ "timezone": "Asia/Seoul",
+ "level": 2.8,
+ "styles": {
+  "default": {
+   "facade": "apartment",
+   "wall": [
+    "#eeeae0",
+    "#e9e4d8",
+    "#f1ede4"
+   ],
+   "roof": "flat",
+   "flatRoof": "#c9c4b8",
+   "parapet": 1.0,
+   "floor": 2.8,
+   "levels": 15,
+   "balcony": true,
+   "shop": "none",
+   "glass": [
+    "#a9bcc6",
+    "#9fb3bf"
+   ],
+   "trim": "#b9a68a"
+  },
+  "rules": [
+   {
+    "if": {
+     "type": "retail"
+    },
+    "set": {
+     "facade": "plain",
+     "levels": 2,
+     "floor": 3.5,
+     "balcony": false,
+     "shop": "street",
+     "wall": [
+      "#e6ddcd"
+     ],
+     "awning": false,
+     "fascia": [
+      "#2f5d8a",
+      "#3f6a55"
+     ]
+    }
+   },
+   {
+    "if": {
+     "type": "school"
+    },
+    "set": {
+     "facade": "civic",
+     "levels": 4,
+     "floor": 3.6,
+     "balcony": false,
+     "wall": [
+      "#e8dcc6",
+      "#d9c3a5"
+     ]
+    }
+   },
+   {
+    "if": {
+     "type": "government"
+    },
+    "set": {
+     "facade": "civic",
+     "levels": 3,
+     "floor": 3.8,
+     "balcony": false,
+     "wall": [
+      "#e9e2d4"
+     ]
+    }
+   },
+   {
+    "if": {
+     "type": "residential"
+    },
+    "set": {
+     "facade": "house",
+     "levels": 3,
+     "floor": 2.9,
+     "balcony": "some",
+     "wall": [
+      "#e4d6c0",
+      "#d8c4a8",
+      "#ebe3d3"
+     ]
+    }
+   },
+   {
+    "if": {
+     "unknownHeight": true
+    },
+    "set": {
+     "facade": "plain",
+     "levels": 2,
+     "floor": 3.3,
+     "balcony": false,
+     "wall": [
+      "#e4dccd"
+     ]
+    }
+   }
+  ]
+ },
+ "buildings": {
+  "w226064367": {
+   "facade": "civic",
+   "levels": 3,
+   "floor": 3.8,
+   "balcony": false,
+   "wall": [
+    "#e3d5bf"
+   ]
+  },
+  "w497679407": {
+   "facade": "plain",
+   "levels": 1,
+   "floor": 4.5,
+   "balcony": false,
+   "shop": "street"
+  }
+ },
+ "palette": {
+  "ground": "#e9e0cc",
+  "road": "#a9a5a8",
+  "pavement": "#e3d8c4",
+  "walk": "#ddd2bd",
+  "grass": "#b4d784",
+  "slab": "#d6c6a8",
+  "marking": "#f4efe2",
+  "kerb": "#d9d2c2",
+  "paving": "#c2b6a4",
+  "water": "#8fb5ad"
+ },
+ "paving": {
+  "style": "tiles",
+  "size": 0.3
+ },
+ "lamp": {
+  "colour": "#6a6f73",
+  "height": 6,
+  "head": "#f3ecd8"
+ },
+ "shops": {
+  "signs": [
+   "편의점",
+   "세탁소",
+   "미용실",
+   "부동산",
+   "약국"
+  ],
+  "font": "'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif",
+  "fascias": [
+   "#2f5d8a",
+   "#3f6a55",
+   "#8a3d36",
+   "#5d5a72"
+  ]
+ },
+ "trees": {
+  "default": {
+   "style": 3,
+   "colours": [
+    "#8ab673",
+    "#a3c477"
+   ],
+   "height": 8,
+   "autumn": "#d9a24a"
+  },
+  "rules": [
+   {
+    "match": "Park tree",
+    "vary": 0.35,
+    "mix": [
+     {
+      "style": 3,
+      "colours": [
+       "#86b46d",
+       "#9dc274"
+      ],
+      "height": 9,
+      "autumn": "#d98b45",
+      "share": 2
+     },
+     {
+      "style": 1,
+      "colours": [
+       "#93bb70"
+      ],
+      "height": 8,
+      "autumn": "#e0b54c",
+      "share": 1
+     },
+     {
+      "style": 5,
+      "colours": [
+       "#5f9257"
+      ],
+      "height": 7,
+      "evergreen": true,
+      "share": 1
+     }
+    ]
+   },
+   {
+    "match": "Bank tree",
+    "vary": 0.3,
+    "mix": [
+     {
+      "style": 4,
+      "colours": [
+       "#9cc86a",
+       "#aed170"
+      ],
+      "height": 9,
+      "autumn": "#d9b84f",
+      "share": 1
+     },
+     {
+      "style": 3,
+      "colours": [
+       "#8ab673",
+       "#9dc274"
+      ],
+      "height": 8,
+      "autumn": "#d98b45",
+      "share": 1
+     }
+    ]
+   },
+   {
+    "match": "Street tree",
+    "vary": 0.25,
+    "style": 1,
+    "colours": [
+     "#8ab673",
+     "#9fc576"
+    ],
+    "height": 9,
+    "autumn": "#e0b54c"
+   }
+  ]
+ },
+ "people": {
+  "clothes": [
+   "#2f3640",
+   "#e9e4d8",
+   "#7d8b9a",
+   "#3e5a7a",
+   "#a85a4a",
+   "#d8c7a0",
+   "#4d5b4a"
+  ],
+  "umbrellas": [
+   "#2f3640",
+   "#e9e4d8",
+   "#3e5a7a",
+   "#c9584c"
+  ]
+ },
+ "vehicles": {
+  "kinds": [
+   "sedan",
+   "sedan",
+   "suv",
+   "hatch",
+   "mpv",
+   "small"
+  ],
+  "colours": [
+   "#f2f2ee",
+   "#f2f2ee",
+   "#2b2d33",
+   "#2b2d33",
+   "#a3a8ad",
+   "#c8ccd0",
+   "#5b6470"
+  ],
+  "plate": "#f4f4f0",
+  "taxi": {
+   "share": 0.08,
+   "colours": [
+    "#e9e7e0",
+    "#c8ccd0"
+   ],
+   "kind": "sedan",
+   "sign": "#f6e7a6"
+  }
+ },
+ "seasonLabel": "계절",
+ "seasons": [
+  {
+   "id": "spring",
+   "label": "봄",
+   "leaves": "spring",
+   "crowd": 1.1,
+   "note": {
+    "text": "인천의 월평균 풍속은 3월이 3.6m/s로 가장 높다.",
+    "source": "기상청 날씨누리",
+    "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1"
+   },
+   "boats": 0
+  },
+  {
+   "id": "summer",
+   "label": "여름",
+   "leaves": "summer",
+   "wet": true,
+   "umbrellas": 0.5,
+   "wx": "rain",
+   "crowd": 0.8,
+   "note": {
+    "text": "인천의 여름철 강수량 합은 718.3mm로 연강수량의 약 60%다.",
+    "source": "기상청 날씨누리",
+    "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1"
+   },
+   "boats": 0
+  },
+  {
+   "id": "autumn",
+   "label": "가을",
+   "leaves": "autumn",
+   "crowd": 1.0,
+   "note": {
+    "text": "인천의 첫서리 평년일은 11월 11일이다.",
+    "source": "기상청 날씨누리",
+    "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1"
+   },
+   "boats": 0
+  },
+  {
+   "id": "winter",
+   "label": "겨울",
+   "leaves": "bare",
+   "coats": true,
+   "crowd": 0.7,
+   "note": {
+    "text": "인천에서 가장 추운 달은 1월로, 평균기온이 -1.5℃다.",
+    "source": "기상청 날씨누리",
+    "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1"
+   },
+   "boats": 0
+  },
+  {
+   "id": "snow",
+   "label": "눈",
+   "sub": "winter",
+   "leaves": "bare",
+   "snow": true,
+   "wx": "snow",
+   "coats": true,
+   "crowd": 0.5,
+   "note": {
+    "text": "인천의 첫눈 평년일은 11월 23일이다.",
+    "source": "기상청 날씨누리",
+    "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1"
+   },
+   "boats": 0
+  }
+ ],
+ "occasions": [
+  {
+   "id": "night",
+   "label": "밤",
+   "leaves": "summer",
+   "night": 0.9,
+   "litShare": 0.6,
+   "crowd": 0.5,
+   "boats": 0,
+   "note": {
+    "text": "밤 장면은 예시입니다. 불 켜진 창의 비율과 가로등 위치는 실제 관측이 아닙니다.",
+    "source": "Field notes",
+    "url": "https://www.openstreetmap.org/#map=17/37.5619/126.7578"
+   }
+  }
+ ],
+ "months": [
+  "winter",
+  "winter",
+  "spring",
+  "spring",
+  "spring",
+  "summer",
+  "summer",
+  "summer",
+  "autumn",
+  "autumn",
+  "autumn",
+  "winter"
+ ],
+ "isoLabel": "동양동 전경",
+ "views": [
+  {
+   "id": "library",
+   "label": "동양도서관",
+   "camera": {
+    "yaw": -30,
+    "pitch": 32,
+    "zoom": 1.6,
+    "x": 2,
+    "y": 1,
+    "z": 4
+   }
+  },
+  {
+   "id": "complex",
+   "label": "아파트 단지",
+   "camera": {
+    "yaw": -30,
+    "pitch": 30,
+    "zoom": 2.2,
+    "x": 130,
+    "y": 60,
+    "z": 15
+   }
+  },
+  {
+   "id": "canal",
+   "label": "서부간선수로",
+   "camera": {
+    "yaw": 20,
+    "pitch": 40,
+    "zoom": 1.3,
+    "x": -120,
+    "y": 0,
+    "z": 2
+   }
+  }
+ ],
+ "legend": [
+  {
+   "name": "동양도서관",
+   "source": "OpenStreetMap",
+   "count": "",
+   "icon": "landmark",
+   "camera": {
+    "yaw": -30,
+    "pitch": 32,
+    "zoom": 1.6,
+    "x": 2,
+    "y": 1,
+    "z": 4
+   }
+  },
+  {
+   "name": "아파트 동",
+   "source": "OpenStreetMap",
+   "count": "18",
+   "icon": "buildings",
+   "camera": {
+    "yaw": -30,
+    "pitch": 30,
+    "zoom": 2.2,
+    "x": 130,
+    "y": 60,
+    "z": 15
+   }
+  },
+  {
+   "name": "서부간선수로",
+   "source": "OpenStreetMap",
+   "count": "",
+   "icon": "water",
+   "camera": {
+    "yaw": 20,
+    "pitch": 40,
+    "zoom": 1.3,
+    "x": -120,
+    "y": 0,
+    "z": 2
+   }
+  },
+  {
+   "name": "나무 (공원·수로변·가로수)",
+   "source": "배치는 예시",
+   "count": "1363",
+   "icon": "trees",
+   "camera": {
+    "yaw": -30,
+    "pitch": 34,
+    "zoom": 1.6,
+    "x": 60,
+    "y": 20,
+    "z": 3
+   }
+  }
+ ],
+ "notes": [
+  {
+   "title": "부지",
+   "text": "인천 계양구 동양동 동양도서관을 중심으로 한 600m 정사각형입니다. 건물 윤곽, 아파트 층수, 도로, 수로, 공원은 OpenStreetMap에서 가져왔습니다.",
+   "links": [
+    {
+     "label": "OpenStreetMap",
+     "url": "https://www.openstreetmap.org/#map=17/37.5619/126.7578"
+    }
+   ]
+  },
+  {
+   "title": "기후",
+   "text": "계절 설명은 모두 기상청 1991~2020 평년값 기준 인천 관측소 자료입니다.",
+   "links": [
+    {
+     "label": "기상청 지역별 기후특성",
+     "url": "https://www.weather.go.kr/w/climate/statistics/regional-char.do?area=1"
+    }
+   ]
+  },
+  {
+   "title": "예시로 그린 것",
+   "text": "동양도서관과 계양3동행정복지센터는 도면과 사진을 확인하지 못해 OSM 윤곽 위에 3층 공공건물로 단순하게 그렸습니다. 층수 정보가 없는 주택(3층)·학교(4층)·기타 건물(2층)의 높이, 외벽·지붕·간판 색, 나무 수종과 위치, 차량 색, 사람과 차량의 움직임도 예시입니다. 수로변 나무(7m 간격)와 가로수(14m 간격)는 요청에 따라 예시로 늘려 그린 것이며, 실제 나무 위치·수종을 반영하지 않습니다. 밤 장면(불 켜진 창 60%, 가로등)도 예시입니다.",
+   "links": [
+    {
+     "label": "OpenStreetMap",
+     "url": "https://www.openstreetmap.org/#map=17/37.5619/126.7578"
+    }
+   ]
+  }
+ ],
+ "credits": [],
+ "occasionLabel": "장면"
+}

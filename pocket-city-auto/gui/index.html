@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pocket City 지도 도구</title>
+<link rel="stylesheet" href="/static/leaflet/leaflet.css">
+<style>
+:root{
+  --bg:#f6f2e8; --panel:#fffdf7; --ink:#25322d; --muted:#6c756f; --rule:#e2dccb;
+  --accent:#2f5d4a; --accent-ink:#fff; --warn:#b4472f; --sel:rgba(47,93,74,.16);
+  --shadow:0 6px 24px rgba(40,50,45,.16);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#1b211e; --panel:#242c28; --ink:#e8ede9; --muted:#9aa59f; --rule:#37413c;
+    --accent:#7dbd9f; --accent-ink:#10201a; --warn:#e8896f; --sel:rgba(125,189,159,.18); --shadow:0 6px 24px rgba(0,0,0,.45)}
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI","Malgun Gothic","Noto Sans KR",sans-serif}
+#map{position:absolute;inset:0}
+.panel{position:absolute;top:16px;left:16px;z-index:1000;width:360px;max-height:calc(100% - 32px);overflow:auto;
+  background:var(--panel);border:1px solid var(--rule);border-radius:14px;box-shadow:var(--shadow);padding:18px 18px 16px}
+h1{font-size:17px;margin:0 0 2px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+label{display:block;font-size:12.5px;font-weight:600;margin:14px 0 5px}
+input[type=text],select{width:100%;padding:9px 11px;font:inherit;color:inherit;background:var(--bg);border:1px solid var(--rule);border-radius:9px}
+input[type=text]:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.row{display:flex;gap:8px}
+.row>*{flex:1}
+button{font:inherit;cursor:pointer;border-radius:9px;border:1px solid var(--rule);background:var(--bg);color:var(--ink);padding:9px 12px}
+button.primary{width:100%;margin-top:16px;padding:12px;background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700;font-size:15px}
+button:disabled{opacity:.55;cursor:default}
+.hint{font-size:12px;color:var(--muted);margin:5px 0 0}
+.err{color:var(--warn)}
+.coord{font:600 13px ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--sel);border-radius:8px;padding:8px 10px;margin-top:10px;word-break:break-all}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.size-head{display:flex;justify-content:space-between;align-items:baseline}
+.size-head b{font-variant-numeric:tabular-nums}
+#results{list-style:none;margin:6px 0 0;padding:0;border:1px solid var(--rule);border-radius:9px;overflow:hidden}
+#results:empty{display:none}
+#results li{padding:8px 10px;font-size:13px;cursor:pointer;border-top:1px solid var(--rule)}
+#results li:first-child{border-top:0}
+#results li:hover{background:var(--sel)}
+#status{margin-top:14px;font-size:13px}
+#log{margin:8px 0 0;max-height:130px;overflow:auto;background:var(--bg);border:1px solid var(--rule);border-radius:9px;
+  padding:8px 10px;font:11.5px/1.45 ui-monospace,Consolas,monospace;white-space:pre-wrap;color:var(--muted)}
+#log:empty{display:none}
+.done{display:flex;gap:8px;margin-top:10px}
+.done[hidden]{display:none}
+.done a,.done button{flex:1;text-align:center;text-decoration:none;color:var(--accent-ink);background:var(--accent);border:1px solid var(--accent);
+  border-radius:9px;padding:10px;font-weight:600;font-size:14px}
+.done button.alt{background:var(--bg);color:var(--ink);border-color:var(--rule)}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--rule);border-top-color:var(--accent);border-radius:50%;
+  animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+#preview{position:absolute;inset:0;z-index:1500;background:var(--bg);display:none}
+#preview.on{display:block}
+#preview iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+#preview .close{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:2;box-shadow:var(--shadow);background:var(--panel);font-weight:600}
+.leaflet-container{background:#e9e4d6;font:inherit}
+@media (max-width:700px){.panel{left:8px;right:8px;top:8px;width:auto;max-height:62%}}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="panel">
+  <h1>Pocket City 지도 도구</h1>
+  <p class="sub">지도에서 위치를 고르고 만들기를 누르세요.</p>
+
+  <label for="paste">위도, 경도 붙여넣기</label>
+  <input id="paste" type="text" placeholder="41.30293726923572, 69.33947542389276" autocomplete="off" spellcheck="false">
+  <p class="hint" id="pasteHint">구글 지도에서 복사한 좌표를 그대로 붙여넣으면 됩니다.</p>
+
+  <label for="q">장소 검색</label>
+  <div class="row">
+    <input id="q" type="text" placeholder="예: 동양도서관, Tashkent" autocomplete="off">
+    <button id="go" style="flex:0 0 auto">검색</button>
+  </div>
+  <ul id="results"></ul>
+
+  <div class="coord" id="coord">지도를 클릭해 위치를 정하세요</div>
+
+  <label class="size-head" for="size"><span>한 변 길이</span><b id="sizeVal">300 m</b></label>
+  <input id="size" type="range" min="80" max="600" step="10" value="300">
+  <p class="hint">지도의 초록 사각형이 대략의 범위입니다. 실제 부지는 도로 방향에 맞춰 조금 돌아갈 수 있습니다.</p>
+
+  <div class="row">
+    <div><label for="drive">통행 방향</label>
+      <select id="drive"><option value="right">우측통행</option><option value="left">좌측통행</option></select></div>
+    <div><label for="name">이름 (선택)</label><input id="name" type="text" placeholder="자동" autocomplete="off"></div>
+  </div>
+
+  <button class="primary" id="make" disabled>Pocket City 만들기</button>
+  <div id="status" aria-live="polite"></div>
+  <pre id="log"></pre>
+  <div class="done" id="done" hidden>
+    <a id="open" target="_blank" rel="noopener">새 탭에서 열기</a>
+    <button class="alt" id="peek">여기서 미리보기</button>
+  </div>
+</div>
+
+<div id="preview"><button class="close" id="closePrev">닫기 ✕</button><iframe id="frame" title="Pocket City 미리보기"></iframe></div>
+
+<script src="/static/leaflet/leaflet.js"></script>
+<script>
+(function(){
+  var $ = function(id){return document.getElementById(id)};
+  var store = {get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},
+               set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+  var last = null;
+  try{ last = JSON.parse(store.get('pcgui')||'null') }catch(e){}
+  var start = last || {lat:41.30293726923572, lon:69.33947542389276, size:300, zoom:16};
+
+  var map = L.map('map',{zoomControl:false}).setView([start.lat,start.lon], start.zoom||16);
+  L.control.zoom({position:'bottomright'}).addTo(map);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+
+  var pt = null, dot = null, box = null;
+
+  function square(lat, lon, size){
+    var h = size/2, dLat = h/111320, dLon = h/(111320*Math.cos(lat*Math.PI/180));
+    return [[lat-dLat,lon-dLon],[lat+dLat,lon+dLon]];
+  }
+  function draw(){
+    if(!pt) return;
+    var size = +$('size').value;
+    if(!dot){
+      dot = L.circleMarker([pt.lat,pt.lon],{radius:6,color:'#fff',weight:2,fillColor:'#2f5d4a',fillOpacity:1}).addTo(map);
+      box = L.rectangle(square(pt.lat,pt.lon,size),{color:'#2f5d4a',weight:2,fillColor:'#2f5d4a',fillOpacity:.14}).addTo(map);
+    }else{
+      dot.setLatLng([pt.lat,pt.lon]); box.setBounds(square(pt.lat,pt.lon,size));
+    }
+    $('coord').textContent = pt.lat.toFixed(6)+', '+pt.lon.toFixed(6);
+    $('make').disabled = busy;
+    store.set('pcgui', JSON.stringify({lat:pt.lat,lon:pt.lon,size:size,zoom:map.getZoom()}));
+  }
+  function setPoint(lat, lon, fly){
+    pt = {lat:lat, lon:lon};
+    if(fly) map.setView([lat,lon], Math.max(map.getZoom(),16));
+    draw();
+  }
+
+  // 좌표 붙여넣기: "41.30, 69.33" / "41.30 69.33" / "41.30N, 69.33E" 등
+  function parseCoord(s){
+    var m = String(s).match(/(-?\d+(?:\.\d+)?)\s*°?\s*([NSns])?\s*[,;\s/]+\s*(-?\d+(?:\.\d+)?)\s*°?\s*([EWew])?/);
+    if(!m) return null;
+    var lat = parseFloat(m[1]), lon = parseFloat(m[3]);
+    if(m[2] && /s/i.test(m[2])) lat = -Math.abs(lat);
+    if(m[4] && /w/i.test(m[4])) lon = -Math.abs(lon);
+    return {lat:lat, lon:lon};
+  }
+  function onPaste(){
+    var v = $('paste').value.trim(), hint = $('pasteHint');
+    if(!v){ hint.className='hint'; hint.textContent='구글 지도에서 복사한 좌표를 그대로 붙여넣으면 됩니다.'; return }
+    var c = parseCoord(v);
+    if(!c){ hint.className='hint err'; hint.textContent='좌표를 읽지 못했습니다. 위도, 경도 순서로 숫자 두 개를 넣어 주세요.'; return }
+    if(Math.abs(c.lat)>85 || Math.abs(c.lon)>180){
+      hint.className='hint err';
+      hint.textContent = (Math.abs(c.lat)<=180 && Math.abs(c.lon)<=85) ? '위도와 경도의 순서가 바뀐 것 같습니다. 위도(−85~85)가 먼저 와야 합니다.' : '범위를 벗어났습니다. 위도 −85~85, 경도 −180~180.';
+      return;
+    }
+    hint.className='hint'; hint.textContent='지도에 표시했습니다.';
+    setPoint(c.lat, c.lon, true);
+  }
+  $('paste').addEventListener('input', onPaste);
+  $('paste').addEventListener('paste', function(){ setTimeout(onPaste,0) });
+
+  map.on('click', function(e){ setPoint(e.latlng.lat, e.latlng.lng, false); $('paste').value=''; $('pasteHint').className='hint'; });
+
+  $('size').addEventListener('input', function(){ $('sizeVal').textContent = this.value+' m'; draw(); });
+  $('sizeVal').textContent = ($('size').value = start.size||300)+' m';
+
+  // 장소 검색 (Nominatim)
+  function search(){
+    var q = $('q').value.trim(); if(!q) return;
+    var ul = $('results'); ul.innerHTML='';
+    var li = document.createElement('li'); li.textContent='검색 중…'; ul.appendChild(li);
+    fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=ko&q='+encodeURIComponent(q))
+      .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json() })
+      .then(function(rs){
+        ul.innerHTML='';
+        if(!rs.length){ var n=document.createElement('li'); n.textContent='결과가 없습니다.'; ul.appendChild(n); return }
+        rs.forEach(function(r){
+          var li=document.createElement('li'); li.textContent=r.display_name;
+          li.onclick=function(){ ul.innerHTML=''; setPoint(+r.lat,+r.lon,true); };
+          ul.appendChild(li);
+        });
+      })
+      .catch(function(){ ul.innerHTML=''; var n=document.createElement('li'); n.textContent='검색에 실패했습니다. 잠시 뒤 다시 시도하세요.'; ul.appendChild(n); });
+  }
+  $('go').addEventListener('click', search);
+  $('q').addEventListener('keydown', function(e){ if(e.key==='Enter') search(); });
+
+  // 만들기
+  var busy = false, timer = null;
+  function setBusy(b){ busy = b; $('make').disabled = b || !pt; $('make').textContent = b ? '만드는 중…' : 'Pocket City 만들기'; }
+  function poll(id, since){
+    fetch('/api/job/'+id+'?since='+since).then(function(r){return r.json()}).then(function(j){
+      var log = $('log');
+      if(j.log && j.log.length){ log.textContent += (log.textContent?'\n':'')+j.log.join('\n'); log.scrollTop = log.scrollHeight; }
+      if(j.status==='running'){ timer = setTimeout(function(){poll(id,j.next)}, 1000); return }
+      setBusy(false);
+      if(j.status==='done'){
+        $('status').textContent = '완성했습니다.';
+        $('open').href = j.url; $('done').hidden = false; $('peek').onclick = function(){ $('frame').src = j.url; $('preview').classList.add('on'); };
+      }else{
+        $('status').innerHTML = '<span class="err">만들지 못했습니다. 아래 기록을 확인하세요.</span>';
+      }
+    }).catch(function(){ timer = setTimeout(function(){poll(id,since)}, 2000); });
+  }
+  $('make').addEventListener('click', function(){
+    if(!pt || busy) return;
+    $('log').textContent=''; $('done').hidden=true;
+    $('status').innerHTML='<span class="spin"></span>지도 데이터를 받아 만드는 중입니다. 보통 1~3분 걸립니다.';
+    setBusy(true);
+    fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({lat:pt.lat,lon:pt.lon,size:+$('size').value,drive:$('drive').value,name:$('name').value})})
+      .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j} }) })
+      .then(function(x){
+        if(!x.ok){ setBusy(false); $('status').innerHTML='<span class="err">'+(x.j.error||'오류')+'</span>'; return }
+        poll(x.j.id, 0);
+      }).catch(function(){ setBusy(false); $('status').innerHTML='<span class="err">서버에 연결하지 못했습니다. gui.py 가 실행 중인지 확인하세요.</span>'; });
+  });
+  $('closePrev').addEventListener('click', function(){ $('preview').classList.remove('on'); $('frame').src='about:blank'; });
+
+  if(last) setPoint(last.lat, last.lon, false);
+})();
+</script>
+</body>
+</html>
