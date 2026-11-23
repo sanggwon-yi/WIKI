@@ -105,6 +105,8 @@ def make_city(template, scene, name, region, lat, lon, size, trees_added):
     if not c.get('views'):
         c['views'] = views
     c['legend'] = legend[:4]    # 범례 칸은 네 개까지 보인다
+    if lat < 0 and c.get('months'):   # 남반구는 계절이 반대
+        c['months'] = c['months'][6:] + c['months'][:6]
     return c
 
 
